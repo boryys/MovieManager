@@ -9,6 +9,7 @@ namespace MovieManager
     public enum Rating { Terrible, Bad, Ok, Good, Awesome };
     public enum Type { Thriller, Comedy, Drama, Horror };
 
+    [Serializable()]
     public class Movie
     {
         public string Title { get; set; }

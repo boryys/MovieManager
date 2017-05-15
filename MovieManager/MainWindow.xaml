@@ -14,7 +14,7 @@
             <GradientStop Offset="1" Color=" #b2ffb4"/>
         </LinearGradientBrush>
 
-        <Style x:Key="ListViewStyle" TargetType="{x:Type ListBoxItem}">
+        <Style x:Key="ListViewStyle" TargetType="{x:Type ListViewItem}">
             <Style.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                              Color="#b4ceab"/>
@@ -34,8 +34,7 @@
             </Style.Triggers>
         </Style>
 
-        <CollectionViewSource x:Key="Movies" Source="{Binding}">
-        </CollectionViewSource>
+        <CollectionViewSource x:Key="Movies" Source="{Binding}" />
 
         <ObjectDataProvider x:Key="RatingEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -75,12 +74,24 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <StackPanel  Margin="5,5,5,5">
-                                        <TextBlock Text="{Binding Title, StringFormat='Title: {0}'}"/>
-                                        <TextBlock Text="{Binding Director, StringFormat='Director: {0}'}"/>
-                                        <TextBlock Name="rating" Text="{Binding Rating, StringFormat='Rating: {0}'}" Visibility="Collapsed"/>
-                                        <TextBlock Name="type" Text="{Binding Type, StringFormat='Type: {0}'}" Visibility="Collapsed"/>
-                                    </StackPanel>
+                                    <WrapPanel Orientation="Vertical"  Margin="5,5,5,5">
+                                        <TextBlock>
+                                            <Run Text="Title: " ></Run>
+                                            <Run Text="{Binding Title}"></Run>
+                                        </TextBlock>
+                                        <TextBlock>
+                                            <Run Text="Director: " ></Run>
+                                            <Run Text="{Binding Director}"></Run>
+                                        </TextBlock>
+                                        <TextBlock Name="rating" Visibility="Collapsed">
+                                            <Run Text="Rating: " ></Run>
+                                            <Run Text="{Binding Rating}"></Run> 
+                                        </TextBlock>
+                                        <TextBlock Name="type" Visibility="Collapsed">
+                                            <Run Text="Type: " ></Run>
+                                            <Run Text="{Binding Type}"></Run>
+                                        </TextBlock>
+                                    </WrapPanel>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -95,15 +106,15 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Name="CheckBoxes" Margin="0,0,400,0" >
-                        <CheckBox Margin="10,10,10,5" Name="TitleCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By title</CheckBox>
-                        <CheckBox Margin="10,10,10,5" Name="DirectorCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By author</CheckBox>
-                        <CheckBox Margin="10,10,0,5" Name="RatingCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By rating</CheckBox>
-                        <CheckBox Margin="10" Name="TypeCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By type</CheckBox>
+                        <CheckBox Unchecked="TitleCheckBox_Unchecked" Margin="10,10,10,5" Name="TitleCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By title</CheckBox>
+                        <CheckBox Unchecked="DirectorCheckBox_Unchecked" Margin="10,10,10,5" Name="DirectorCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By author</CheckBox>
+                        <CheckBox Checked="RatingCheckBox_Checked" Unchecked="RatingCheckBox_Unchecked" Margin="10,10,0,5" Name="RatingCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By rating</CheckBox>
+                        <CheckBox Checked="TypeCheckBox_Checked" Unchecked="TypeCheckBox_Unchecked" Margin="10" Name="TypeCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By type</CheckBox>
                     </StackPanel>
                     <StackPanel Grid.Row ="0" Name="TextBoxes">
                         <TextBox x:Name="TitleBox" Text="type title" Margin="220,5,10,5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                 IsEnabled="{Binding ElementName=TitleCheckBox, Path=IsChecked}"/>
-                        <TextBox x:Name="DirectorBox" Text="type title" Margin="220,5,10,5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                 IsEnabled="{Binding ElementName=TitleCheckBox, Path=IsChecked}" />
+                        <TextBox x:Name="DirectorBox" Text="type director" Margin="220,5,10,5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                  IsEnabled="{Binding ElementName=DirectorCheckBox, Path=IsChecked}"/>
                         <ComboBox x:Name="RatingBox" Margin="297,5,60,5" Width="140" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" RenderTransformOrigin="1.088,0.409"
                                   ItemsSource="{Binding Source={StaticResource RatingEnum}}" SelectedItem="{Binding Path=CurrentRating}" IsEnabled="{Binding ElementName=RatingCheckBox, Path=IsChecked}"/>
@@ -111,9 +122,36 @@
                                   ItemsSource="{Binding Source={StaticResource TypeEnum}}"  SelectedItem="{Binding Path=CurrentType}" IsEnabled="{Binding ElementName=TypeCheckBox, Path=IsChecked}"/>
                     </StackPanel>
                     <WrapPanel Grid.Row="1" Name="Buttons">
-                        <Button Content="Find movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
-                        <Button Content="Delete movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                        <Button Name="FindButton" Click="FindButton_Click" Content="Find movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                        <Button Name="DeleteButton" Click="DeleteButton_Click" Content="Delete movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
                     </WrapPanel>
+                    <ListView Name = "SearchViewList" Grid.Row="2" SelectionChanged="MoviesListView_SelectionChanged"
+                              Margin="5" Background="Transparent" ItemContainerStyle="{StaticResource ListViewStyle}" AlternationCount="2">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <WrapPanel Orientation="Vertical"  Margin="5,5,5,5">
+                                        <TextBlock>
+                                            <Run Text="Title: " ></Run>
+                                            <Run Text="{Binding Title}"></Run>
+                                        </TextBlock>
+                                        <TextBlock>
+                                            <Run Text="Director: " ></Run>
+                                            <Run Text="{Binding Director}"></Run>
+                                        </TextBlock>
+                                        <Expander Header="Details">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Rating: "></TextBlock>
+                                                <TextBlock Text="{Binding Rating}"></TextBlock>
+                                                <TextBlock Text="   Type: "></TextBlock>
+                                                <TextBlock Text="{Binding Type}"></TextBlock>
+                                            </StackPanel>
+                                        </Expander>
+                                    </WrapPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
             </TabItem>
             <TabItem Header="Edit">
