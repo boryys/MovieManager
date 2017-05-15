@@ -4,9 +4,121 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MovieManager"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Movie Manager" Height="600" Width="800" MinHeight="400" MinWidth="600" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <LinearGradientBrush x:Key ="BackgroundColor" EndPoint="1,0" StartPoint="0,1">
+            <GradientStop Offset="0" Color="#007c04"/>
+            <GradientStop Offset="1" Color=" #b2ffb4"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="ListViewStyle" TargetType="{x:Type ListBoxItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                             Color="#b4ceab"/>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#b5d1ff"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value=" #edf3ff"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="Background" Value="#b4ceab"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <CollectionViewSource x:Key="Movies" Source="{Binding}">
+        </CollectionViewSource>
+
+        <ObjectDataProvider x:Key="RatingEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Rating"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="TypeEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Type"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource BackgroundColor}">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Height="20">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Import movies" Click="MenuItem_Import"/>
+                    <MenuItem Header="_Export movies" Click="MenuItem_Export"/>
+                </MenuItem>
+                <MenuItem Header="_Menu">
+                    <MenuItem Header="_Help" Click="MenuItem_Help"/>
+                    <MenuItem Header="_Add movies" Click="MenuItem_Add"/>
+                    <MenuItem Header="_Delete all movies" Click="MenuItem_DeleteAll"/>
+                    <MenuItem Header="_Exit" Click="MenuItem_Exit"/>
+                </MenuItem>
+            </Menu>
+            <DockPanel></DockPanel>
+        </DockPanel>
+
+        <TabControl TabStripPlacement="Right" Margin="0,20,0,0" Background="Transparent" BorderThickness="3">
+            <TabItem Header="View">
+                <Grid>
+                    <ListView Name="MoviesListView" SelectionChanged="MoviesListView_SelectionChanged" ItemsSource="{Binding Source={StaticResource Movies}}"
+                              Margin="5" Background="Transparent" ItemContainerStyle="{StaticResource ListViewStyle}" AlternationCount="2">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel  Margin="5,5,5,5">
+                                        <TextBlock Text="{Binding Title, StringFormat='Title: {0}'}"/>
+                                        <TextBlock Text="{Binding Director, StringFormat='Director: {0}'}"/>
+                                        <TextBlock Name="rating" Text="{Binding Rating, StringFormat='Rating: {0}'}" Visibility="Collapsed"/>
+                                        <TextBlock Name="type" Text="{Binding Type, StringFormat='Type: {0}'}" Visibility="Collapsed"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Search">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="130"></RowDefinition>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Name="CheckBoxes" Margin="0,0,400,0" >
+                        <CheckBox Margin="10,10,10,5" Name="TitleCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By title</CheckBox>
+                        <CheckBox Margin="10,10,10,5" Name="DirectorCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By author</CheckBox>
+                        <CheckBox Margin="10,10,0,5" Name="RatingCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By rating</CheckBox>
+                        <CheckBox Margin="10" Name="TypeCheckBox" HorizontalAlignment="Left" VerticalAlignment="Top">By type</CheckBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row ="0" Name="TextBoxes">
+                        <TextBox x:Name="TitleBox" Text="type title" Margin="220,5,10,5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                 IsEnabled="{Binding ElementName=TitleCheckBox, Path=IsChecked}"/>
+                        <TextBox x:Name="DirectorBox" Text="type title" Margin="220,5,10,5" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                 IsEnabled="{Binding ElementName=DirectorCheckBox, Path=IsChecked}"/>
+                        <ComboBox x:Name="RatingBox" Margin="297,5,60,5" Width="140" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" RenderTransformOrigin="1.088,0.409"
+                                  ItemsSource="{Binding Source={StaticResource RatingEnum}}" SelectedItem="{Binding Path=CurrentRating}" IsEnabled="{Binding ElementName=RatingCheckBox, Path=IsChecked}"/>
+                        <ComboBox x:Name="TypeBox" Margin="297,5,60,5" Width="140" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" RenderTransformOrigin="1.088,0.409"
+                                  ItemsSource="{Binding Source={StaticResource TypeEnum}}"  SelectedItem="{Binding Path=CurrentType}" IsEnabled="{Binding ElementName=TypeCheckBox, Path=IsChecked}"/>
+                    </StackPanel>
+                    <WrapPanel Grid.Row="1" Name="Buttons">
+                        <Button Content="Find movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                        <Button Content="Delete movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                    </WrapPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Edit">
+                <DataGrid Margin="5" Background="Transparent" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" ItemsSource="{Binding}"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
