@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
+using System.Globalization;
 
 namespace MovieManager
 {
@@ -37,6 +38,9 @@ namespace MovieManager
 
             this.DataContext = MoviesList;
             SearchViewList.ItemsSource = SearchList;
+
+            TitleBox.Text = "type title";
+            DirectorBox.Text = "type author";
         }
 
         private void MenuItem_Import(object sender, RoutedEventArgs e)
@@ -86,7 +90,7 @@ namespace MovieManager
 
         private void MenuItem_Add(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 MoviesList.Add(new Movie()
                 {
@@ -101,6 +105,7 @@ namespace MovieManager
         private void MenuItem_DeleteAll(object sender, RoutedEventArgs e)
         {
             MoviesList.Clear();
+            SearchList.Clear();
         }
 
         private void MenuItem_Exit(object sender, RoutedEventArgs e)
@@ -180,20 +185,282 @@ namespace MovieManager
 
         private void FindButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!TitleBox.IsEnabled && !DirectorBox.IsEnabled && !RatingBox.IsEnabled && !TypeBox.IsEnabled)
+            if (!TitleBox.IsEnabled && !DirectorBox.IsEnabled && !RatingBox.IsEnabled && !TypeBox.IsEnabled)
             {
                 MessageBox.Show("You must specify some criteria.", "Error");
             }
             else
             {
-               
-            }
+                SearchList.Clear();
 
+                Movie temp = new Movie();
+
+                //1
+                if (TitleBox.IsEnabled && !DirectorBox.IsEnabled && !RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    foreach(var item in MoviesList)
+                    {
+                        if(item.Title.Equals(TitleBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //2
+                if (!TitleBox.IsEnabled && DirectorBox.IsEnabled && !RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    foreach (var item in MoviesList)
+                    {
+                        if (item.Director.Equals(DirectorBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //3
+                if (!TitleBox.IsEnabled && !DirectorBox.IsEnabled && RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+
+                        if (ratingsearch.Equals(RatingBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //4
+                if (!TitleBox.IsEnabled && !DirectorBox.IsEnabled && !RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        typesearch = item.Type.ToString();
+
+                        if (typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //5
+                if (TitleBox.IsEnabled && DirectorBox.IsEnabled && !RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    foreach (var item in MoviesList)
+                    {
+                        if (item.Title.Equals(TitleBox.Text) && item.Director.Equals(DirectorBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //6
+                if (TitleBox.IsEnabled && !DirectorBox.IsEnabled && RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && ratingsearch.Equals(RatingBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //7
+                if (TitleBox.IsEnabled && !DirectorBox.IsEnabled && !RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        typesearch = item.Type.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //8
+                if (!TitleBox.IsEnabled && DirectorBox.IsEnabled && RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+
+                        if (item.Director.Equals(DirectorBox.Text) && ratingsearch.Equals(RatingBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //9
+                if (!TitleBox.IsEnabled && DirectorBox.IsEnabled && !RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        typesearch = item.Type.ToString();
+
+                        if (item.Director.Equals(DirectorBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //10
+                if (!TitleBox.IsEnabled && !DirectorBox.IsEnabled && RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+                        typesearch = item.Type.ToString();
+
+                        if (ratingsearch.Equals(RatingBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //11
+                if (TitleBox.IsEnabled && DirectorBox.IsEnabled && RatingBox.IsEnabled && !TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && item.Director.Equals(DirectorBox.Text) && ratingsearch.Equals(RatingBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //12
+                if (TitleBox.IsEnabled && DirectorBox.IsEnabled && !RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        typesearch = item.Type.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && item.Director.Equals(DirectorBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //13
+                if (TitleBox.IsEnabled && !DirectorBox.IsEnabled && RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+                        typesearch = item.Type.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && ratingsearch.Equals(RatingBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //14
+                if (!TitleBox.IsEnabled && DirectorBox.IsEnabled && RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+                        typesearch = item.Type.ToString();
+
+                        if (item.Director.Equals(DirectorBox.Text) && ratingsearch.Equals(RatingBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+                //15
+                if (TitleBox.IsEnabled && DirectorBox.IsEnabled && RatingBox.IsEnabled && TypeBox.IsEnabled)
+                {
+                    string ratingsearch;
+                    string typesearch;
+
+                    foreach (var item in MoviesList)
+                    {
+                        ratingsearch = item.Rating.ToString();
+                        typesearch = item.Type.ToString();
+
+                        if (item.Title.Equals(TitleBox.Text) && item.Director.Equals(DirectorBox.Text) && ratingsearch.Equals(RatingBox.Text) && typesearch.Equals(TypeBox.Text))
+                        {
+                            temp = item;
+                            SearchList.Add(item);
+                        }
+                    }
+                }
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            foreach (var item in SearchList)
+            {
+                MoviesList.Remove(item);
+            }
 
+            SearchList.Clear();
+        }
+    }
+
+    public class EmptyValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (value == null)
+            {
+                return new ValidationResult(false, "Please enter some text");
+            }
+            else
+            {
+                if (value.ToString().Length == 0)
+                {
+                    return new ValidationResult(false, "Please enter some text");
+                }
+            }
+            return ValidationResult.ValidResult;
         }
     }
 }

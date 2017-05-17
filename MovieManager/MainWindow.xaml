@@ -14,6 +14,8 @@
             <GradientStop Offset="1" Color=" #b2ffb4"/>
         </LinearGradientBrush>
 
+        <CollectionViewSource x:Key="Movies" Source="{Binding}" />
+
         <Style x:Key="ListViewStyle" TargetType="{x:Type ListViewItem}">
             <Style.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
@@ -33,8 +35,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <CollectionViewSource x:Key="Movies" Source="{Binding}" />
 
         <ObjectDataProvider x:Key="RatingEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -122,8 +122,8 @@
                                   ItemsSource="{Binding Source={StaticResource TypeEnum}}"  SelectedItem="{Binding Path=CurrentType}" IsEnabled="{Binding ElementName=TypeCheckBox, Path=IsChecked}"/>
                     </StackPanel>
                     <WrapPanel Grid.Row="1" Name="Buttons">
-                        <Button Name="FindButton" Click="FindButton_Click" Content="Find movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
-                        <Button Name="DeleteButton" Click="DeleteButton_Click" Content="Delete movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                            <Button Name="FindButton" Click="FindButton_Click" Content="Find movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
+                            <Button Name="DeleteButton" Click="DeleteButton_Click" Content="Delete movies" Height="22" Width="150" Margin="10,2,5,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Top" />
                     </WrapPanel>
                     <ListView Name = "SearchViewList" Grid.Row="2" SelectionChanged="MoviesListView_SelectionChanged"
                               Margin="5" Background="Transparent" ItemContainerStyle="{StaticResource ListViewStyle}" AlternationCount="2">
